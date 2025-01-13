@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Use rofi/zenity to change system runstate thanks to systemd.
+# Use rofi/zenity to change system runstate thanks to elogind.
 #
 # Note: this currently relies on associative array support in the shell.
 #
@@ -63,7 +63,7 @@ where:
     -p  preferred launcher (rofi or zenity)
 
 This script depends on:
-  - systemd,
+  - elogind,
   - i3,
   - rofi or zenity."
 
@@ -104,8 +104,8 @@ function command_exists() {
   command -v "$1" &> /dev/null 2>&1
 }
 
-# systemctl required
-if ! command_exists systemctl ; then
+# loginctl required
+if ! command_exists loginctl ; then
   exit 1
 fi
 
@@ -114,11 +114,11 @@ typeset -A menu
 
 # Menu with keys/commands
 menu=(
-  [Shutdown]="systemctl poweroff"
-  [Reboot]="systemctl reboot"
-  [Hibernate]="systemctl hibernate"
-  [Suspend]="systemctl suspend"
-  [Halt]="systemctl halt"
+  [Shutdown]="loginctl poweroff"
+  [Reboot]="loginctl reboot"
+  [Hibernate]="loginctl hibernate"
+  [Suspend]="loginctl suspend"
+  [Halt]="loginctl hybrid-sleep"
   [Lock]="${LOCKSCRIPT:-i3lock --color=${BG_COLOR#"#"}}"
   [Logout]="i3-msg exit"
   [Cancel]=""
